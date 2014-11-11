@@ -26,7 +26,7 @@ QueryEvaluatorTest::tearDown()
 CPPUNIT_TEST_SUITE_REGISTRATION( QueryEvaluatorTest );
 
 void QueryEvaluatorTest::testBasicSelect() {
-	StatementTable st;
+	PKBController pk;
 	TNode stmt1("ASSIGN_NODE","a = x", 1,0);
 	TNode stmt2("ASSIGN_NODE","b = y", 2,0);
 	TNode stmt3("WHILE_NODE","c", 3,0);
@@ -37,45 +37,45 @@ void QueryEvaluatorTest::testBasicSelect() {
 	TNode stmt8("ASSIGN_NODE","h=u", 8,0);
 	TNode stmt9("WHILE_NODE","i", 9,0);
 	TNode stmt10("WHILE_NODE","j", 10,0);
-	st.insertStatement(&stmt1);
-	st.insertStatement(&stmt2);
-	st.insertStatement(&stmt3);
-	st.insertStatement(&stmt4);
-	st.insertStatement(&stmt5);
-	st.insertStatement(&stmt6);
-	st.insertStatement(&stmt7);
-	st.insertStatement(&stmt8);
-	st.insertStatement(&stmt9);
-	st.insertStatement(&stmt10);
+	pk.statementTable.insertStatement(&stmt1);
+	pk.statementTable.insertStatement(&stmt2);
+	pk.statementTable.insertStatement(&stmt3);
+	pk.statementTable.insertStatement(&stmt4);
+	pk.statementTable.insertStatement(&stmt5);
+	pk.statementTable.insertStatement(&stmt6);
+	pk.statementTable.insertStatement(&stmt7);
+	pk.statementTable.insertStatement(&stmt8);
+	pk.statementTable.insertStatement(&stmt9);
+	pk.statementTable.insertStatement(&stmt10);
 
-	Follows f1;
-	f1.insertFollows(1, 2);
-	f1.insertFollows(2, 3);
-	f1.insertFollows(3, 4);
-	f1.insertFollows(4, 5);
-	f1.insertFollows(5, 6);
-	f1.insertFollows(6, 7);
-	f1.insertFollows(7, 8);
-	f1.insertFollows(8, 9);
-	f1.insertFollows(9, 10);
+	pk.followsTable.insertFollows(1, 2);
+	pk.followsTable.insertFollows(2, 3);
+	pk.followsTable.insertFollows(3, 4);
+	pk.followsTable.insertFollows(4, 5);
+	pk.followsTable.insertFollows(5, 6);
+	pk.followsTable.insertFollows(6, 7);
+	pk.followsTable.insertFollows(7, 8);
+	pk.followsTable.insertFollows(8, 9);
+	pk.followsTable.insertFollows(9, 10);
 
-	ProcTable pt;
-	pt.insertProc("Proc1");
+	pk.procTable.insertProc("Proc1");
 
-	VarTable vt;
-	vt.insertVar("x");
-	vt.insertVar("y");
-	vt.insertVar("z");
-	vt.insertVar("a");
-	vt.insertVar("b");
-	vt.insertVar("c");
+	pk.varTable.insertVar("x");
+	pk.varTable.insertVar("y");
+	pk.varTable.insertVar("z");
+	pk.varTable.insertVar("a");
+	pk.varTable.insertVar("b");
+	pk.varTable.insertVar("c");
 
-	QueryEvaluator* qe = new QueryEvaluator();
+	QueryEvaluator* qe = new QueryEvaluator(&pk);
+
 	map<string, string> table1;
 	table1["s"]="stmt";
-	vector<int> actualResult1 = qe->solveForSelect("s", &table1, &st, &pt, &vt); // stmt s1; Select s1 such that Follows(s1, 2) | Expected <1>
-	CPPUNIT_ASSERT_EQUAL((size_t)10, actualResult1.size());
+
+	//vector<int> actualResult1 = qe->solveForSelect("s", &table1, &st, &pt, &vt); // stmt s1; Select s1 such that Follows(s1, 2) | Expected <1>
+	//CPPUNIT_ASSERT_EQUAL((size_t)10, actualResult1.size());
 }
+
 void QueryEvaluatorTest::testCheckSynonymInSuchThat(){
 	QTNode* modifies = new QTNode("Modifies");
 	QTNode* synonym1 = new QTNode("synonym1");
@@ -90,7 +90,7 @@ void QueryEvaluatorTest::testCheckSynonymInSuchThat(){
 	CPPUNIT_ASSERT_EQUAL(true, qe->checkSynonymInSuchThat("synonym2", suchThatStub));
 	CPPUNIT_ASSERT_EQUAL(false, qe->checkSynonymInSuchThat("synonym3", suchThatStub));
 }
-
+/*
 void QueryEvaluatorTest::testSolveForSuchThatFollows(){
 	StatementTable st;
 	TNode stmt1("ASSIGN_NODE","a = x", 1,0);
@@ -1301,6 +1301,97 @@ void QueryEvaluatorTest::testSolveForSuchThatFollows(){
 	vector<int> actualResult72 = qe->solveForSuchThatFollows("s1", &table1, query72, &st2, &f2, &pt, &vt, &ct); // stmt s1; while w3, w4; Select s1 such that Follows(w3, w4) | Expected <> (none)
 	
 	CPPUNIT_ASSERT(actualResult72.empty());
+}
+*/
+
+void QueryEvaluatorTest::testSolveForSuchThatFollows(){
+	PKBController pk;
+	TNode stmt1("ASSIGN_NODE","a = x", 1,0);
+	TNode stmt2("ASSIGN_NODE","b = y", 2,0);
+	TNode stmt3("WHILE_NODE","c", 3,0);
+	TNode stmt4("ASSIGN_NODE","d = t", 4,0);
+	TNode stmt5("ASSIGN_NODE","e = v", 5,0);
+	TNode stmt6("WHILE_NODE","f", 6,0);
+	TNode stmt7("WHILE_NODE","g", 7,0);
+	TNode stmt8("ASSIGN_NODE","h=u", 8,0);
+	TNode stmt9("WHILE_NODE","i", 9,0);
+	TNode stmt10("WHILE_NODE","j", 10,0);
+	pk.statementTable.insertStatement(&stmt1);
+	pk.statementTable.insertStatement(&stmt2);
+	pk.statementTable.insertStatement(&stmt3);
+	pk.statementTable.insertStatement(&stmt4);
+	pk.statementTable.insertStatement(&stmt5);
+	pk.statementTable.insertStatement(&stmt6);
+	pk.statementTable.insertStatement(&stmt7);
+	pk.statementTable.insertStatement(&stmt8);
+	pk.statementTable.insertStatement(&stmt9);
+	pk.statementTable.insertStatement(&stmt10);
+
+	pk.followsTable.insertFollows(1, 2);
+	pk.followsTable.insertFollows(2, 3);
+	pk.followsTable.insertFollows(3, 4);
+	pk.followsTable.insertFollows(4, 5);
+	pk.followsTable.insertFollows(5, 6);
+	pk.followsTable.insertFollows(6, 7);
+	pk.followsTable.insertFollows(7, 8);
+	pk.followsTable.insertFollows(8, 9);
+	pk.followsTable.insertFollows(9, 10);
+
+	pk.procTable.insertProc("Proc1");
+
+	pk.varTable.insertVar("x");
+	pk.varTable.insertVar("y");
+	pk.varTable.insertVar("z");
+	pk.varTable.insertVar("a");
+	pk.varTable.insertVar("b");
+	pk.varTable.insertVar("c");
+
+	QueryEvaluator* qe = new QueryEvaluator(&pk);
+
+	map<string, string> table1;
+	table1["s1"]="stmt";
+	table1["s2"]="stmt";
+	table1["a1"]="assign";
+	table1["a2"]="assign";
+	table1["w1"]="while";
+	table1["w2"]="while";
+	table1["v1"]="variable";
+	table1["v2"]="variable";
+	table1["proc1"]="procedure";
+
+	QTNode* follows1 = new QTNode("Follows");
+	QTNode* first1 = new QTNode("s1");
+	QTNode* second1 = new QTNode(2);
+	first1->setParent(follows1);
+	follows1->addChild(first1);
+	second1->setParent(follows1);
+	follows1->addChild(second1);
+	QueryTree* query1 = new QueryTree(follows1);
+
+	vector<vector<int>> actualResult1 = qe->solveForSuchThatFollows(&table1, query1); // stmt s1; Select s1 such that Follows(s1, 2) | Expected <<1>,<2>>
+	
+	CPPUNIT_ASSERT_EQUAL((size_t)2, actualResult1.size());
+	CPPUNIT_ASSERT_EQUAL((size_t)1, actualResult1[0].size());
+	CPPUNIT_ASSERT_EQUAL((size_t)1, actualResult1[1].size());
+	CPPUNIT_ASSERT_EQUAL(1, actualResult1[0][0]);
+	CPPUNIT_ASSERT_EQUAL(2, actualResult1[1][0]);
+
+	QTNode* follows2 = new QTNode("Follows");
+	QTNode* first2 = new QTNode("a2");
+	QTNode* second2 = new QTNode(3);
+	first2->setParent(follows2);
+	follows2->addChild(first2);
+	second2->setParent(follows2);
+	follows2->addChild(second2);
+	QueryTree* query2 = new QueryTree(follows2);
+
+	vector<vector<int>> actualResult2 = qe->solveForSuchThatFollows(&table1, query2); // assign a2; Select a2 such that Follows(a2, 3) | Expected <<2>,<3>>
+
+	CPPUNIT_ASSERT_EQUAL((size_t)2, actualResult2.size());
+	CPPUNIT_ASSERT_EQUAL((size_t)1, actualResult2[0].size());
+	CPPUNIT_ASSERT_EQUAL((size_t)1, actualResult2[1].size());
+	CPPUNIT_ASSERT_EQUAL(2, actualResult2[0][0]);
+	CPPUNIT_ASSERT_EQUAL(3, actualResult2[1][0]);
 }
 
 void QueryEvaluatorTest::testSolveForSuchThatModifies(){
