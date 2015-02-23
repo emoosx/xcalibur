@@ -1,12 +1,16 @@
+#pragma once
+#include <iostream>
 #include "CfgNode.h"
 
 using namespace std;
 
+
 CfgNode::CfgNode(){
 }
 
-CfgNode::CfgNode(int data) {
-	prog_line_num = data;
+CfgNode::CfgNode(int prog_line, string node_type) {
+	prog_line_num = prog_line;
+	CfgNode_type = node_type;
 }
 
 int CfgNode::getData(){

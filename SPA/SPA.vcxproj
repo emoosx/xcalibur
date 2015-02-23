@@ -14,6 +14,7 @@
     <ClCompile Include="AST.cpp" />
     <ClCompile Include="Calls.cpp" />
     <ClCompile Include="CallsExtractor.cpp" />
+    <ClCompile Include="CfgNode.cpp" />
     <ClCompile Include="ConstantTable.cpp" />
     <ClCompile Include="Follows.cpp" />
     <ClCompile Include="FollowsExtractor.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="AST.h" />
     <ClInclude Include="Calls.h" />
     <ClInclude Include="CallsExtractor.h" />
+    <ClInclude Include="CfgNode.h" />
     <ClInclude Include="ConstantTable.h" />
     <ClInclude Include="Follows.h" />
     <ClInclude Include="FollowsExtractor.h" />
